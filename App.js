@@ -1,32 +1,33 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, Button, StatusBar, Platform, Animated, Easing, I18nManager} from 'react-native';
-import { StackNavigator, TabNavigator, createStackNavigator } from 'react-navigation';
-import StackViewStyleInterpolator from 'react-navigation/src/views/StackView/StackViewStyleInterpolator'
+import { createStackNavigator } from 'react-navigation'
 
 const isAndroid = Platform.OS === 'android';
 
-const Screen1 = ({ navigation }) => (
-  <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
-    <StatusBar
-      translucent
-      barStyle="light-content"
-      backgroundColor="transparent"
-    />
-    <Text style={[styles.paragraph, { color: '#fff' }]}>
-      Light Screen
-    </Text>
-    <Button
-      title="Next screen"
-      onPress={() => navigation.navigate('Screen2')}
-      color={isAndroid ? "blue" : "#fff"}
-    />
-    {/* <Button
-      title="Toggle Drawer"
-      onPress={() => navigation.navigate('DrawerToggle')}
-      color={isAndroid ? "blue" : "#fff"}
-    /> */}
-  </SafeAreaView>
-);
+const Screen1 = ({ navigation }) => {
+  return(
+    <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
+      <StatusBar
+        translucent
+        barStyle="light-content"
+        backgroundColor="transparent"
+      />
+      <Text style={[styles.paragraph, { color: '#fff' }]}>
+        Light Screen
+      </Text>
+      <Button
+        title="Next screen"
+        onPress={() => navigation.navigate('Screen2')}
+        color={isAndroid ? "blue" : "#fff"}
+      />
+      {/* <Button
+        title="Toggle Drawer"
+        onPress={() => navigation.navigate('DrawerToggle')}
+        color={isAndroid ? "blue" : "#fff"}
+      /> */}
+    </SafeAreaView>
+  )
+};
 
 const Screen2 = ({ navigation }) => (
   <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
@@ -42,32 +43,19 @@ const Screen2 = ({ navigation }) => (
       title="Next screen"
       onPress={() => navigation.navigate('Screen1')}
     />
-    {/* <Button
-      title="Toggle Drawer"
-      onPress={() => navigation.navigate('DrawerToggle')}
-    /> */}
   </SafeAreaView>
 );
-
-// export default StackNavigator({
-//   Screen1: {
-//     screen: Screen1,
-//   },
-//   Screen2: {
-//     screen: Screen2,
-//   },
-// }, {
-//   headerMode: 'none',
-// });
 
 export default createStackNavigator({
   Screen1: {
     screen: Screen1,
     navigationOptions: {
       headerTintColor: '#fff',
+      title: `A`,
       headerStyle: {
         backgroundColor: '#222222',
       },
+      headerBackTitle: null
     },
   },
   Screen2: {
@@ -82,7 +70,9 @@ export default createStackNavigator({
 },{
   headerMode: 'screen',
   mode: 'card',
-  
+  cardStyle: {
+    backgroundColor: '#000000',
+  },
   transitionConfig: () => ({
     transitionSpec: {
       duration: 400,
@@ -90,7 +80,11 @@ export default createStackNavigator({
       timing: Animated.timing,
       useNativeDriver: true,
     },
+    containerStyle: {
+      backgroundColor: '#000000',
+    },
     screenInterpolator: sceneProps => {
+      
       const { position, layout, scene, index, scenes } = sceneProps
       const toIndex = index
       const thisSceneIndex = scene.index
@@ -99,24 +93,17 @@ export default createStackNavigator({
 
       const opacity = position.interpolate({
         inputRange: [thisSceneIndex - 2, thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1, thisSceneIndex + 2],
-        //default: outputRange: [1, 1, 0.3],
-        outputRange: [0, 1, 1, 0.9, 0],
-    });
-
-      /* const translateX = position.interpolate({
-        inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-        outputRange: [width, 0, -(width/2)]
-      }) */
+        outputRange: [1, 1, 1, 0.3, 0],
+      })
 
       const translateX = position.interpolate({
         inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
         outputRange: I18nManager.isRTL
           ? [-width, 0, width * 0.075]
           : [width, 0, width * -0.075],
-      });
+      })
 
       const slideFromRight = { opacity, transform: [{ translateX }]}
-
       return slideFromRight
     },
   }),
