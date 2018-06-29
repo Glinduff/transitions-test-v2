@@ -1,5 +1,6 @@
-import React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, Button, StatusBar, Platform, Animated, Easing, I18nManager} from 'react-native';
+import React, {Component} from 'react';
+import transitionConfig from "./transitions";
+import { Text, View, StyleSheet, SafeAreaView, Button, StatusBar, Platform} from 'react-native';
 import { createStackNavigator } from 'react-navigation'
 
 const isAndroid = Platform.OS === 'android';
@@ -17,34 +18,56 @@ const Screen1 = ({ navigation }) => {
       </Text>
       <Button
         title="Next screen"
-        onPress={() => navigation.navigate('Screen2')}
+        onPress={() => navigation.push('Screen2')}
         color={isAndroid ? "blue" : "#fff"}
       />
-      {/* <Button
-        title="Toggle Drawer"
-        onPress={() => navigation.navigate('DrawerToggle')}
-        color={isAndroid ? "blue" : "#fff"}
-      /> */}
     </SafeAreaView>
   )
 };
 
-const Screen2 = ({ navigation }) => (
-  <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
-    <StatusBar
-      translucent
-      barStyle="light-content"
-      backgroundColor="transparent"
-    />
-    <Text style={styles.paragraph}>
-      Dark Screen
-    </Text>
-    <Button
-      title="Next screen"
-      onPress={() => navigation.navigate('Screen1')}
-    />
-  </SafeAreaView>
-);
+class Screen2 extends Component{
+  render(){
+    const { navigation } = this.props
+    return(
+      <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
+        <StatusBar
+          translucent
+          barStyle="light-content"
+        />
+        <Text style={styles.paragraph}>
+          Dark Screen
+        </Text>
+        <Button
+          title="Next screen"
+          onPress={() => navigation.push('Screen3')}
+        />
+      </SafeAreaView>
+    )
+  }
+}
+
+class Screen3 extends Component{
+
+  render(){
+    const { navigation } = this.props
+    return(
+      <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
+        <StatusBar
+          translucent
+          barStyle="light-content"
+        />
+        <Text style={styles.paragraph}>
+          Dark Screen
+        </Text>
+        <Button
+          title="Next screen"
+          onPress={() => navigation.popToTop()}
+        />
+      </SafeAreaView>
+    )
+  }
+}
+
 
 export default createStackNavigator({
   Screen1: {
@@ -67,46 +90,22 @@ export default createStackNavigator({
       },
     },
   },
+  Screen3: {
+    screen: Screen3,
+    navigationOptions: {
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: '#222222',
+      },
+    },
+  },
 },{
   headerMode: 'screen',
   mode: 'card',
   cardStyle: {
     backgroundColor: '#000000',
   },
-  transitionConfig: () => ({
-    transitionSpec: {
-      duration: 400,
-      easing: Easing.out(Easing.poly(4)),
-      timing: Animated.timing,
-      useNativeDriver: true,
-    },
-    containerStyle: {
-      backgroundColor: '#000000',
-    },
-    screenInterpolator: sceneProps => {
-      
-      const { position, layout, scene, index, scenes } = sceneProps
-      const toIndex = index
-      const thisSceneIndex = scene.index
-      const height = layout.initHeight
-      const width = layout.initWidth
-
-      const opacity = position.interpolate({
-        inputRange: [thisSceneIndex - 2, thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1, thisSceneIndex + 2],
-        outputRange: [1, 1, 1, 0.3, 0],
-      })
-
-      const translateX = position.interpolate({
-        inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-        outputRange: I18nManager.isRTL
-          ? [-width, 0, width * 0.075]
-          : [width, 0, width * -0.075],
-      })
-
-      const slideFromRight = { opacity, transform: [{ translateX }]}
-      return slideFromRight
-    },
-  }),
+  transitionConfig: transitionConfig
 });
 
 /*  const { first, last } = interpolate;
