@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import transitionConfig from "./transitions";
-import { Text, View, StyleSheet, SafeAreaView, Button, StatusBar, Platform} from 'react-native';
-import { createStackNavigator } from 'react-navigation'
+import { Text, StyleSheet, SafeAreaView, Button, StatusBar, Platform, TouchableHighlight, Image, View} from 'react-native';
+import { createStackNavigator, Header } from 'react-navigation'
 
 const isAndroid = Platform.OS === 'android';
 
@@ -48,13 +48,35 @@ class Screen2 extends Component{
 
 class Screen3 extends Component{
 
+  static navigationOptions = ({ navigation }) => ({
+    headerTintColor: '#fff',
+    headerStyle: {
+      backgroundColor: 'transparent',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      borderBottomWidth: 0,
+      zIndex: 10000
+      },
+  });
+
   render(){
     const { navigation } = this.props
+
+    
     return(
-      <SafeAreaView style={[styles.container, { backgroundColor: '#222222' }]}>
+      <View style={{ flex: 1, justifyContent: 'flex-start', backgroundColor: '#222222' }}>
         <StatusBar
-          translucent
+          translucent={true}
           barStyle="light-content"
+        />
+        <Image 
+          source={{uri: 'https://i.kinja-img.com/gawker-media/image/upload/s--vrEA_8Oq--/c_scale,f_auto,fl_progressive,q_80,w_800/draz0ljtrdpullajogd4.jpg'}}
+          resizeMode={Image.resizeMode.cover} 
+          style={{
+            height: 200
+          }}
         />
         <Text style={styles.paragraph}>
           Dark Screen
@@ -63,7 +85,7 @@ class Screen3 extends Component{
           title="Next screen"
           onPress={() => navigation.popToTop()}
         />
-      </SafeAreaView>
+      </View>
     )
   }
 }
@@ -91,13 +113,7 @@ export default createStackNavigator({
     },
   },
   Screen3: {
-    screen: Screen3,
-    navigationOptions: {
-      headerTintColor: '#fff',
-      headerStyle: {
-        backgroundColor: '#222222',
-      },
-    },
+    screen: Screen3
   },
 },{
   headerMode: 'screen',
