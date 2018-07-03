@@ -51,14 +51,10 @@ class Screen3 extends Component{
   static navigationOptions = ({ navigation }) => ({
     headerTintColor: '#fff',
     headerStyle: {
-      backgroundColor: 'transparent',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
+      elevation: 0,
       borderBottomWidth: 0,
-      zIndex: 10000
-      },
+    },
+    headerTransparent: true
   });
 
   render(){
@@ -75,16 +71,32 @@ class Screen3 extends Component{
           source={{uri: 'https://i.kinja-img.com/gawker-media/image/upload/s--vrEA_8Oq--/c_scale,f_auto,fl_progressive,q_80,w_800/draz0ljtrdpullajogd4.jpg'}}
           resizeMode={Image.resizeMode.cover} 
           style={{
-            height: 200
+            height: 250
           }}
         />
-        <Text style={styles.paragraph}>
-          Dark Screen
-        </Text>
-        <Button
+        <View
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            top: 180,
+            left: 20,
+            backgroundColor:'#fff' ,
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            elevation: 5
+          }}>
+          <Image 
+            source={{uri: 'https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/c/ca/Avengers_Infinity_War_Imax_poster.jpg/revision/latest?cb=20180405170202.jpg'}}
+            resizeMode={Image.resizeMode.cover} 
+            style={{
+              width: 125,
+              height: 180,
+            }}
+          />
+        </View>
+        {/* <Button
           title="Next screen"
           onPress={() => navigation.popToTop()}
-        />
+        /> */}
       </View>
     )
   }
@@ -120,6 +132,7 @@ export default createStackNavigator({
   mode: 'card',
   cardStyle: {
     backgroundColor: '#000000',
+    shadowColor: 'transparent'
   },
   transitionConfig: transitionConfig
 });
